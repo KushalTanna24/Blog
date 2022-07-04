@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { Fragment, useState } from "react";
+import "./App.css";
+
+import Posts from "./Components/Posts/Posts";
+import EditModal from "./Components/Ui/EditModal";
 
 function App() {
+  const [idReceived, setIdReceived] = useState(undefined);
+  const [clicked, setClicked] = useState(false);
+
+  const idHandler = (id) => {
+    setIdReceived(id);
+  };
+  const clickedHandler = () => {
+    setClicked(true);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <EditModal editThis={idReceived} openOn={clicked} />
+      <Posts whatId={idHandler} whatClicked={clickedHandler} />
+    </Fragment>
   );
 }
 
