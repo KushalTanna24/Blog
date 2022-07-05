@@ -2,17 +2,26 @@ import Button from "@mui/material/Button";
 
 import TextField from "@material-ui/core/TextField";
 import { useState } from "react";
+import { InputLabel, Typography } from "@material-ui/core";
+import { FormLabel } from "@mui/material";
 
-const EditModal = ({ closeModal }) => {
-  const [newPost, setNewPost] = useState([]);
+const EditModal = ({ closeModal, addNewPost, postDetails }) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
   const submitFormHandler = (e) => {
     e.preventDefault();
-
+    if (title.trim() || body.trim() === "") {
+      alert("Please fill all fields");
+    }
     setTitle("");
     setBody("");
+    addNewPost({
+      title: title,
+      body: body,
+      id: Math.floor(Math.random() * 100) + 100,
+      userId: 1,
+    });
   };
 
   const cancelHandler = () => {
@@ -21,6 +30,7 @@ const EditModal = ({ closeModal }) => {
 
   return (
     <form align="center" onSubmit={submitFormHandler}>
+      <FormLabel component="h2">Title</FormLabel>
       <TextField
         id="title"
         value={title}
@@ -29,19 +39,24 @@ const EditModal = ({ closeModal }) => {
         fullWidth
         margin="dense"
         variant="outlined"
-        label="Title"
+        placeholder={postDetails.title ? postDetails.title : "Title"}
       />
+
       <br />
+
+      <FormLabel component="h2" style={{ marginTop: "0.6rem" }}>
+        Body
+      </FormLabel>
       <TextField
         id="body"
-        value={body}
+        value={!body === "" ? postDetails.body : body}
         onChange={(e) => setBody(e.target.value)}
+        placeholder={!postDetails.body ? "Enter post body" : postDetails.body}
         style={{ width: "50%" }}
         margin="dense"
         multiline
         rows="7"
         variant="outlined"
-        label="Body"
       />
       <br />
       <Button type="submit" variant="outlined" color="primary">

@@ -1,3 +1,7 @@
+import { Fragment, useEffect, useState } from "react";
+import EditModal from "../Ui/EditModal";
+import Pagination from "../Ui/Pagination";
+
 import {
   Button,
   Card,
@@ -8,9 +12,6 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { Stack } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
-import EditModal from "../Ui/EditModal";
-import Pagination from "../Ui/Pagination";
 
 function Posts() {
   const [openForm, setOpenForm] = useState(false);
@@ -18,15 +19,13 @@ function Posts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage] = useState(10);
   const [posts, setPosts] = useState([]);
+  const [editPostDetails, setEditPostDetails] = useState("");
 
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
-  const handleOpenForm = () => {
-    setOpenForm(!openForm);
-  };
-
+  // useEffect
   useEffect(() => {
     const getPosts = async () => {
       setLoading(true);
@@ -64,7 +63,17 @@ function Posts() {
     );
   }
 
+  // form visibility handler
+  const handleOpenForm = () => {
+    setOpenForm(!openForm);
+  };
+
+  // paginate
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const addNewPostHandler = (post) => {
+    setPosts([post, ...posts]);
+  };
 
   return (
     <Fragment>
@@ -83,6 +92,7 @@ function Posts() {
           </Button>
         </Stack>
       </div>
+
       {/* post title */}
       <Card>
         <CardContent style={{ display: "-ms-inline-flexbox" }}>
@@ -94,16 +104,26 @@ function Posts() {
           <div></div>
         </CardContent>
       </Card>
+
       <br />
+
       {/* pagination */}
       <Pagination
         postPerPage={postPerPage}
         totalPosts={posts.length}
         paginate={paginate}
       />
+
       <br />
       {/* post edit form */}
-      {openForm && <EditModal closeModal={setOpenForm} />}
+      {openForm && (
+        <EditModal
+          closeModal={setOpenForm}
+          addNewPost={addNewPostHandler}
+          postDetails={editPostDetails}
+        />
+      )}
+
       {/* post list */}
       {currentPosts.map((post) => (
         <Card key={post.id} variant="outlined">
@@ -126,6 +146,7 @@ function Posts() {
               type="submit"
               onClick={() => {
                 setOpenForm(true);
+                setEditPostDetails(post);
               }}
             >
               Edit
@@ -136,7 +157,7 @@ function Posts() {
               size="small"
               onClick={() => {
                 setPosts(posts.filter((p) => p.id !== post.id));
-                alert(`Post  ${post.title} deleted`);
+                alert(`Post  "${post.title}" deleted`);
               }}
             >
               Delete
