@@ -1,69 +1,62 @@
+import Button from "@mui/material/Button";
+
+import TextField from "@material-ui/core/TextField";
 import { useState } from "react";
 
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+const EditModal = ({ closeModal }) => {
+  const [newPost, setNewPost] = useState([]);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+  const submitFormHandler = (e) => {
+    e.preventDefault();
 
-const EditModal = (props) => {
-  const [open, setOpen] = useState(false);
+    setTitle("");
+    setBody("");
+  };
 
-  const handleOpen = props.openOn;
-
-  // const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const cancelHandler = () => {
+    closeModal(false);
+  };
 
   return (
-    <div>
-      <Button onClick={handleOpen}>Open modal</Button>
-      <Modal
-        keepMounted
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-title" variant="h5">
-            {props.editThis} Post title
-          </Typography>
-          <br />
-          <Typography id="modal-description">What is this.?</Typography>
-          <br />
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => {
-              alert("Submitted");
-              handleClose();
-            }}
-          >
-            Submit
-          </Button>
+    <form align="center" onSubmit={submitFormHandler}>
+      <TextField
+        id="title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        style={{ width: "50%" }}
+        fullWidth
+        margin="dense"
+        variant="outlined"
+        label="Title"
+      />
+      <br />
+      <TextField
+        id="body"
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        style={{ width: "50%" }}
+        margin="dense"
+        multiline
+        rows="7"
+        variant="outlined"
+        label="Body"
+      />
+      <br />
+      <Button type="submit" variant="outlined" color="primary">
+        Submit
+      </Button>
 
-          <Button
-            variant="outlined"
-            style={{ marginLeft: "0.5em" }}
-            color="secondary"
-            onClick={handleClose}
-          >
-            Cancel
-          </Button>
-        </Box>
-      </Modal>
-    </div>
+      <Button
+        variant="outlined"
+        style={{ marginLeft: "0.5em", margin: "1rem" }}
+        color="secondary"
+        onClick={cancelHandler}
+      >
+        Cancel
+      </Button>
+    </form>
   );
 };
 
