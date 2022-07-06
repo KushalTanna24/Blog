@@ -2,26 +2,29 @@ import Button from "@mui/material/Button";
 
 import TextField from "@material-ui/core/TextField";
 import { useState } from "react";
-import { InputLabel, Typography } from "@material-ui/core";
 import { FormLabel } from "@mui/material";
 
-const EditModal = ({ closeModal, addNewPost, postDetails }) => {
+const EditModal = ({ closeModal, addNewPost, postDetails, editPost }) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
   const submitFormHandler = (e) => {
     e.preventDefault();
-    if (title.trim() || body.trim() === "") {
+    if (title.trim() === "" || body.trim() === "") {
       alert("Please fill all fields");
     }
-    setTitle("");
-    setBody("");
-    addNewPost({
-      title: title,
-      body: body,
-      id: Math.floor(Math.random() * 100) + 100,
-      userId: 1,
-    });
+    else if (postDetails) {
+      editPost({ id: postDetails.id, title: title, body: body, userId: 1 });
+    } else {
+      setTitle("");
+      setBody("");
+      addNewPost({
+        title: title,
+        body: body,
+        id: Math.floor(Math.random() * 100) + 100,
+        userId: 1,
+      });
+    }
   };
 
   const cancelHandler = () => {

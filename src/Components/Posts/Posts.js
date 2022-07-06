@@ -75,6 +75,14 @@ function Posts() {
     setPosts([post, ...posts]);
   };
 
+  const editPost = (post) => {
+    const index = currentPosts.findIndex((p) => p.id === editPostDetails.id);
+    posts[index] = post;
+    setPosts([...posts]);
+    setOpenForm(false);
+    setEditPostDetails("");
+  };
+
   return (
     <Fragment>
       {/* navbar */}
@@ -121,6 +129,7 @@ function Posts() {
           closeModal={setOpenForm}
           addNewPost={addNewPostHandler}
           postDetails={editPostDetails}
+          editPost={editPost}
         />
       )}
 
